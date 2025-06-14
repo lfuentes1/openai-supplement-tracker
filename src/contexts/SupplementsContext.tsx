@@ -1,4 +1,3 @@
-
 import React, { useState, createContext, useContext, ReactNode } from "react";
 
 export type NutritionFact = {
@@ -29,6 +28,8 @@ type SupplementsContextType = {
   updateSupplement: (supp: Supplement) => void;
   search: string;
   setSearch: (s: string) => void;
+  activeSuppIds: string[];
+  toggleActiveSupplement: (id: string) => void;
 };
 
 const SupplementsContext = createContext<SupplementsContextType | undefined>(undefined);
@@ -49,6 +50,9 @@ export function SupplementsProvider({ children }: { children: ReactNode }) {
   const [supplements, setSupplements] = useState<Supplement[]>([]);
   const [search, setSearch] = useState<string>("");
 
+  // New: for Intake Tracker selection
+  const [activeSuppIds, setActiveSuppIds] = useState<string[]>([]);
+
   function addSupplement(input: Omit<Supplement, "id" | "nutritionFacts" | "servingSize" | "servingUnit"> & {
     images?: { front?: File; nutrition?: File }
   }) {
@@ -67,10 +71,18 @@ export function SupplementsProvider({ children }: { children: ReactNode }) {
 
   function removeSupplement(id: string) {
     setSupplements(sups => sups.filter(s => s.id !== id));
+    setActiveSuppIds(ids => ids.filter(_id => _id !== id));
   }
 
   function updateSupplement(updated: Supplement) {
     setSupplements(sups => sups.map(s => (s.id === updated.id ? updated : s)));
+  }
+
+  // Toggle supplement "active" status
+  function toggleActiveSupplement(id: string) {
+    setActiveSuppIds(ids =>
+      ids.includes(id) ? ids.filter(curr => curr !== id) : [...ids, id]
+    );
   }
 
   return (
@@ -82,6 +94,8 @@ export function SupplementsProvider({ children }: { children: ReactNode }) {
         updateSupplement,
         search,
         setSearch,
+        activeSuppIds,
+        toggleActiveSupplement,
       }}
     >
       {children}
