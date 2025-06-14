@@ -1,4 +1,3 @@
-
 import React from "react";
 import SectionPanel from "./SectionPanel";
 import AddSupplement from "./AddSupplement";
@@ -8,6 +7,7 @@ import ActiveVitaminsMineralsPanel from "./ActiveVitaminsMineralsPanel";
 import MissingVitaminsMineralsPanel from "./MissingVitaminsMineralsPanel";
 import { IntakeTrackerDayProvider } from "@/contexts/IntakeTrackerDayContext";
 import IntakeTrackerHeader from "./IntakeTrackerHeader";
+import IntelliPromptsPanel from "./IntelliPromptsPanel";
 
 const MainSectionsLayout: React.FC = () => (
   <SupplementsProvider>
@@ -29,7 +29,8 @@ const MainSectionsLayout: React.FC = () => (
         </IntakeTrackerDayProvider>
       </SectionPanel>
       <SectionPanel title="Insights">
-        {/* To be designed */}
+        <IntelliPromptsPanel />
+        {/* (You can add more insights below the panel in the future) */}
       </SectionPanel>
     </div>
   </SupplementsProvider>
