@@ -9,9 +9,10 @@ import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 import { Label } from "@/components/ui/label";
 import { ArrowUp } from "lucide-react";
+import { useSupplements } from "@/contexts/SupplementsContext";
+import { toast } from "@/components/ui/use-toast";
 
 function extractFileName(file: File): string {
-  // Use filename and remove extension (e.g., "Mega Multivitamin.jpg" => "Mega Multivitamin")
   const name = file.name.replace(/\.[^/.]+$/, "").replace(/_/g, " ");
   return name;
 }
@@ -23,27 +24,22 @@ export default function AddSupplement() {
   const [supplementName, setSupplementName] = useState("");
   const [imageFiles, setImageFiles] = useState<{ front?: File; nutrition?: File }>({});
   const [dragged, setDragged] = useState<{ [K in ImageField]?: boolean }>({});
+  const { addSupplement } = useSupplements();
 
-  // Refs for file inputs
   const frontInputRef = useRef<HTMLInputElement>(null);
   const nutritionInputRef = useRef<HTMLInputElement>(null);
 
-  // Handle file drop or selection
   const handleFile = (file: File, field: ImageField) => {
     setImageFiles((prev) => ({ ...prev, [field]: file }));
-
-    // Only auto-populate name from front image, and only if input is empty
     if (field === "front" && !supplementName) {
       setSupplementName(extractFileName(file));
     }
   };
 
-  // Drag events for styling
   const handleDrag = (field: ImageField, over: boolean) => {
     setDragged((prev) => ({ ...prev, [field]: over }));
   };
 
-  // Generic image upload UI
   const renderImageUpload = (label: string, field: ImageField, ref: React.RefObject<HTMLInputElement>) => (
     <div
       className={`flex-1 border-2 border-dashed rounded-lg p-2 min-h-[78px] flex flex-col items-center justify-center transition-colors cursor-pointer bg-muted/60
@@ -92,11 +88,10 @@ export default function AddSupplement() {
     </div>
   );
 
-  // Handle Add Supplement action (no backend for now)
   const handleAdd = (e: React.FormEvent) => {
     e.preventDefault();
-    // Show a toast or alert for demo
-    alert(`Supplement "${supplementName}" added!`);
+    addSupplement({ name: supplementName, images: imageFiles });
+    toast({ title: "Supplement added", description: `Supplement "${supplementName}" added to My Supplements.` });
     setSupplementName("");
     setImageFiles({});
   };
