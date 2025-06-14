@@ -6,6 +6,8 @@ import MySupplements from "./MySupplements";
 import { SupplementsProvider } from "@/contexts/SupplementsContext";
 import ActiveVitaminsMineralsPanel from "./ActiveVitaminsMineralsPanel";
 import MissingVitaminsMineralsPanel from "./MissingVitaminsMineralsPanel";
+import { IntakeTrackerDayProvider } from "@/contexts/IntakeTrackerDayContext";
+import IntakeTrackerHeader from "./IntakeTrackerHeader";
 
 const MainSectionsLayout: React.FC = () => (
   <SupplementsProvider>
@@ -18,10 +20,13 @@ const MainSectionsLayout: React.FC = () => (
         </div>
       </SectionPanel>
       <SectionPanel title="Intake Tracker">
-        <div className="space-y-6">
-          <ActiveVitaminsMineralsPanel />
-          <MissingVitaminsMineralsPanel />
-        </div>
+        <IntakeTrackerDayProvider>
+          <IntakeTrackerHeader />
+          <div className="space-y-6">
+            <ActiveVitaminsMineralsPanel />
+            <MissingVitaminsMineralsPanel />
+          </div>
+        </IntakeTrackerDayProvider>
       </SectionPanel>
       <SectionPanel title="Insights">
         {/* To be designed */}
